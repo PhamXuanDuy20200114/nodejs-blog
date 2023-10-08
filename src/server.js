@@ -4,18 +4,21 @@ const path = require('path');//common js
 require('dotenv').config();
 
 const app = express() //app express
-const port = process.env.PORT // port => hardcode
+const port = process.env.PORT || 8888 // port => hardcode 
+//Nếu k có process.env.PORT thì dùng cổng 8888
 
 //Khai bao template engine
 app.set('views', path.join(__dirname, 'views/'))
 app.set('view engine', 'ejs')
 
-console.log(">>> Check env: ", process.env)
+//config static file
+app.use(express.static(path.join(__dirname, 'public')))
+
 //Khai bao route
 app.get('/abc', (req, res) => {
     res.send('Check abc!')
 })
-app.get('/hoidanit', (req, res) => {
+app.get('/', (req, res) => {
     // res.send('Hello World!')
     res.render('sample.ejs')
 })
