@@ -12,7 +12,7 @@ const port = process.env.PORT || 8888 // port => hardcode
 configViewEngine(app);
 
 //Khai bao route
-app.use('/test', webRoutes)
+app.use('/', webRoutes)
 
 connection.query(
     'SELECT * FROM Users u',
