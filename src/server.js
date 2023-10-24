@@ -8,6 +8,8 @@ const app = express() //app express
 const port = process.env.PORT || 8888 // port => hardcode 
 //Nếu k có process.env.PORT thì dùng cổng 8888
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 //config template engine va static file
 configViewEngine(app);
 
@@ -17,10 +19,10 @@ app.use('/', webRoutes)
 connection.query(
     'SELECT * FROM Users u',
     function (err, results, fields) {
-        console.log(">>result: ", results); // results contains rows returned by server
+        //console.log(">>result: ", results); // results contains rows returned by server
     }
 );
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    //console.log(`Example app listening on port ${port}`)
 })
