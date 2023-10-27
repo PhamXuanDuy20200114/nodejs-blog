@@ -1,5 +1,5 @@
 const connection = require('../config/database')
-const { getAllUsers, updateByID } = require('../services/CRUDService')
+const { getAllUsers, getUserByID, updateByID, deleteUserByID } = require('../services/CRUDService')
 
 const getHomepage = async (req, res) => {
     let results = await getAllUsers();
@@ -34,15 +34,14 @@ const postCreateUser = async (req, res) => {
         `INSERT INTO Users (email, name, city) VALUES (?, ?, ?)`, [email, name, city])
     console.log(">>result: ", results);
 
-    res.send('Create user success')
+    res.redirect('/')
 }
 const getCreatePage = (req, res) => {
-    res.render('create.ejs')
+    res.render('create.ejs', {})
 }
 const getUpdatePage = async (req, res) => {
     const userID = req.params.id;
-    let [results, fields] = await connection.query(`SELECT * FROM Users Where id =  ?`, [userID]);
-    let user = results && results.length > 0 ? results[0] : {};
+    let user = await getUserByID(userID);
     res.render('edit.ejs', { userEdit: user })
 }
 
@@ -56,6 +55,21 @@ const postUpdateUser = async (req, res) => {
     //res.send("Update success")
     res.redirect('/'); //render lai homepage
 }
+const postDeleteUser = async (req, res) => {
+    const userID = req.params.id;
+    let user = await getUserByID(userID);
+    res.render('delete.ejs', { userDelete: user }); //render lai homepage
+}
+
+const postHandleRemoveUser = async (req, res) => {
+    let userID = req.body.userID;
+    await deleteUserByID(userID);
+    res.redirect('/')
+}
+
 module.exports = {
-    getHomepage, getABC, getHoiDanIT, postCreateUser, getCreatePage, getUpdatePage, postUpdateUser
+    getHomepage, getABC, getHoiDanIT,
+    postCreateUser, getCreatePage,
+    getUpdatePage, postUpdateUser,
+    postDeleteUser, postHandleRemoveUser
 }
